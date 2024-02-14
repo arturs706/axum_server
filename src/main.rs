@@ -58,7 +58,7 @@ impl AppState {
         let jwt_secret: String =
             std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
         let access_token_secret: String =
-            std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+            std::env::var("ACCESS_TOKEN_SECRET").expect("ACCESS_TOKEN_SECRET must be set");
         let refresh_token_secret: String =
             std::env::var("REFRESH_TOKEN_SECRET").expect("REFRESH_TOKEN_SECRET must be set");
         let reset_password_secret: String =
@@ -98,9 +98,9 @@ async fn main() {
         .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE]);
 
     let app = create_router()
-        .layer(cors);
-        // .route_layer(middleware::from_fn(auth_middleware));
+        .layer(cors)
+        .route_layer(middleware::from_fn(auth_middleware));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:10001").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
